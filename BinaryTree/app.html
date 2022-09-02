@@ -1,0 +1,174 @@
+<div id='app'>
+    <div id='prods'>
+
+        <form>
+            <label for='txtCod'>
+        Codigo: <br> <input type='text' id='txtCod'>
+      </label><br>
+
+            <label for='txtNom'>
+        Nombre: <br> <input type='text' id='txtNom'>
+      </label> <br>
+
+            <label for='txtPre'>
+        Precio: <br> <input type='text' id='txtPre'>
+      </label> <br>
+
+            <label for='txtCan'>
+        Cantidad: <br> <input type='text' id='txtCan'>
+      </label> <br><br>
+
+            <button type='button' id='btnAdd'>Agregar</button>
+            <button type='button' id='btnFind'>Buscar</button>
+            <button type='button' id='btnList'>Listar</button>
+            <button type='button' id='btnDele'>Eliminar</button>
+            <button type='button' id='btnClear'>Borrar Detalles</button>
+            <button type='reset'>Cancelar</button>
+        </form>
+
+    </div>
+
+    <div id='detalles'></div>
+
+</div>
+
+
+<script>
+    class Producto {
+        constructor(codigo, nombre, cantidad, precio) {
+            this.codigo = codigo;
+            this.nombre = nombre;
+            this.cantidad = cantidad;
+            this.precio = precio;
+            this.siguiente = null;
+        }
+        infoHtml() {
+            //return '<div><p>Codigo' + this.codigo + ': </p></div>';
+            return `<div><p>Codigo ${this.codigo}:(${this.cantidad}) ${this.nombre} $ ${this.precio}</p></div>`;
+        }
+    }
+
+    class Inventario {
+        constructor() {
+            this.inicio = null;
+        }
+
+        agregar(nuevo) {
+            if (this.inicio == null)
+                this.inicio = nuevo;
+            else {
+                let ultimo = this.inicio;
+                while (ultimo.siguiente != null) {
+                    ultimo = ultimo.siguiente;
+                }
+                ultimo.siguiente = nuevo;
+            }
+        }
+
+        listar() {
+            let texto = "";
+            let temp = this.inicio;
+            while (temp != null) {
+                texto += temp.infoHtml() + '<br>';
+                temp = temp.siguiente;
+            }
+            return texto;
+        }
+        buscar(codigo) {
+            let temp = this.inicio;
+            while (temp != null) {
+                if (temp.codigo == codigo)
+                    return temp;
+                temp = temp.siguiente;
+            }
+            return null;
+        }
+        eliminar(codigo) {
+                let a = 0;
+                let temp = this.inicio;
+                if (temp.codigo == codigo) {
+                    this.inicio = this.inicio.siguiente;
+
+                } else {
+                    //while (a == 0) {
+                    if (temp.siguiente.codigo == codigo) {
+                        if (temp.siguiente.siguiente != null) {
+                            temp.siguiente = temp.siguiente.siguiente;
+                            a = 1;
+
+                        } else {
+                            temp.siguiente = null;
+                            a = 1;
+                        }
+
+
+                    }
+                    temp = temp.siguiente;
+
+                }
+            }
+            //}
+
+
+    }
+
+    //programa
+
+    let miInv = new Inventario();
+
+    const btnAdd = document.getElementById('btnAdd');
+    btnAdd.addEventListener('click', () => {
+        let cod = document.getElementById('txtCod').value;
+        let nom = document.getElementById('txtNom').value;
+        let pre = document.getElementById('txtPre').value;
+        let can = document.getElementById('txtCan').value;
+        let prod = new Producto(cod, nom, can, pre);
+        miInv.agregar(prod);
+
+
+        let detalles = document.getElementById('detalles');
+        detalles.innerHTML += '<p>Se agrego producto:' + nom + '</p>';
+        console.log(miInv);
+    });
+
+    const btnList = document.getElementById('btnList');
+    btnList.addEventListener('click', () => {
+        let detalles = document.getElementById('detalles');
+        detalles.innerHTML += '<h3>Listado</h3>' + miInv.listar();
+    });
+
+    const btnFind = document.getElementById('btnFind');
+    btnFind.addEventListener('click', () => {
+        let cod = document.getElementById('txtCod').value;
+        let res = miInv.buscar(cod);
+        let detalles = document.getElementById('detalles');
+        if (res == null)
+            detalles.innerHTML += '<p>No existe el bsucado</p>';
+        else {
+            detalles.innerHTML += `<p>Si existe ${res.infoHtml()}</p>`;
+            res.precio++;
+            document.getElementById('txtNom').value = res.nombre;
+            document.getElementById('txtPre').value = res.precio;
+            document.getElementById('txtCan').value = res.cantidad;
+        }
+    });
+
+    const btnClear = document.getElementById('btnClear');
+    btnClear.addEventListener('click', () => {
+        document.getElementById('detalles').innerHTML = '';
+    });
+
+
+    const btnEliminar = document.getElementById('btnEliminar');
+    btnDele.addEventListener('click', () => {
+        let cod = document.getElementById('txtCod').value;
+        let res = miInv.eliminar(cod);
+        let detalles = document.getElementById('detalles');
+        /*if (res == null)
+            detalles.innerHTML += '<p>No existe el buscado</p>';*/
+
+        //detalles.innerHTML += alert("Se ha eliminado el " + cod);
+        document.getElementById('detalles').innerHTML += "Se ha eliminado el codigo " + cod;
+
+    });
+</script>

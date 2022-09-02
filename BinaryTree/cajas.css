@@ -1,0 +1,20 @@
+body {
+    background-color: #80ddb6;
+}
+
+h2 {
+    text-transform: uppercase;
+}
+
+button {
+    background-color: #09a162;
+    border: none;
+    color: rgb(255, 254, 254);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
